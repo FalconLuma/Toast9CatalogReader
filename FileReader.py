@@ -27,7 +27,6 @@ class FileReader:
                         self.disks[key] = l
                     else:
                         print(c)
-            print('done')
 
     def getKeys(self):
         keys = self.disks.keys()

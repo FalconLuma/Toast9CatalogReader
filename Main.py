@@ -14,40 +14,39 @@ class Main:
     def build(self):
         # Create the root window
         window = Tk()
+        window.resizable(width=False,height=False)
 
         # Set window title
-        window.title('File Explorer')
+        window.title('Toast9 Disk Catalog Reader')
 
         # Set window size
-        window.geometry("1000x800")
+        window.geometry("1160x800")
 
         # Set window background color
         window.config(background="white")
 
         # Create a File Explorer label
         self.label_file_explorer = Label(window,
-                                    text="File Explorer using Tkinter",
-                                    width=100, height=4,
-                                    fg="blue")
+                                    text="Select a file to open",
+                                    width=170, height=4,
+                                    fg="blue",
+                                    )
 
         button_explore = Button(window,
                                 text="Browse Files",
                                 command=self.openFile)
 
-        button_exit = Button(window,
-                             text="Exit",
-                             command=exit)
-
         self.label_file_explorer.grid(column=1, row=1, columnspan=3)
 
         button_explore.grid(column=1, row=2, columnspan=3)
 
-        button_exit.grid(column=1, row=3, columnspan=3)
+        label = Label(text="Enter search terms, with each phrase seperated by a comma")
+        label.grid(column=1,columnspan=2,row=3)
 
-        self.textbox = Text(window,height=1,width=80, wrap='none')
+        self.textbox = Text(window,height=1,width=80, wrap='none',bg="gray95")
         self.textbox.grid(column=1,row =4,columnspan=2)
-        button = Button(window,text="search",command=self.search)
-        button.grid(column=3, row = 4)
+        self.searchButton = Button(window,text="Search",command=self.search,state='disabled', width=40)
+        self.searchButton.grid(column=3, row = 4,sticky='w')
 
         self.disk_text_area = scrolledtext.ScrolledText(window, width = 30, height = 40)
         self.disk_text_area.grid(column=1, row=5)
@@ -60,6 +59,7 @@ class Main:
         window.mainloop()
 
     def openFile(self):
+        self.searchButton.config(state='disabled')
         filename = filedialog.askopenfilename(initialdir="/",
                                               title="Select a File",
                                               filetypes=(("Text files", "*.txt*"),
@@ -69,6 +69,7 @@ class Main:
         self.label_file_explorer.configure(text="File Opened: " + filename)
         self.fileReader = FileReader(filename)
         self.fileReader.parseFile()
+        self.searchButton.config(state='normal')
 
     def search(self):
         self.disk_text_area.config(state='normal')
@@ -110,7 +111,6 @@ class Main:
                     except KeyError:
                         found[k] = [e]
                 fullMatch = True
-        print("search done")
         self.printSearch(found)
 
     def printSearch(self, results):
