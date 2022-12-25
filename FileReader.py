@@ -34,4 +34,3 @@ class FileReader:
         for k in keys:
             list.append(k)
         return list
-
